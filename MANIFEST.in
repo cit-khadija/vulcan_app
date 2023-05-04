@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include vulcan_app *.css
+recursive-include vulcan_app *.csv
+recursive-include vulcan_app *.html
+recursive-include vulcan_app *.ico
+recursive-include vulcan_app *.js
+recursive-include vulcan_app *.json
+recursive-include vulcan_app *.md
+recursive-include vulcan_app *.png
+recursive-include vulcan_app *.py
+recursive-include vulcan_app *.svg
+recursive-include vulcan_app *.txt
+recursive-exclude vulcan_app *.pyc
