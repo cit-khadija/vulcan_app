@@ -1,0 +1,185 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{item_code}-{door_no}-{###}",
+ "creation": "2023-03-15 15:31:11.770323",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "door_type",
+  "column_break_efxgx",
+  "door_no",
+  "specifications_section",
+  "frame_height",
+  "frame_width",
+  "frame_j_depth",
+  "frame_type",
+  "column_break_fg5av",
+  "undercut",
+  "u_channel",
+  "fire_rating",
+  "ral",
+  "item_details",
+  "hardware_set_section_section",
+  "hardware_set",
+  "hw_set_data",
+  "hardware_set_summary",
+  "references_tab",
+  "quotation",
+  "sales_order"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "options": "Item",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "door_no",
+   "fieldtype": "Data",
+   "label": "Door No",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_efxgx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "door_type",
+   "fieldtype": "Data",
+   "label": "Door Type"
+  },
+  {
+   "fieldname": "specifications_section",
+   "fieldtype": "Section Break",
+   "label": "Specifications"
+  },
+  {
+   "fieldname": "frame_height",
+   "fieldtype": "Data",
+   "label": "Frame Height"
+  },
+  {
+   "fieldname": "frame_width",
+   "fieldtype": "Data",
+   "label": "Frame Width"
+  },
+  {
+   "fieldname": "frame_j_depth",
+   "fieldtype": "Data",
+   "label": "Frame J. Depth"
+  },
+  {
+   "fieldname": "frame_type",
+   "fieldtype": "Data",
+   "label": "Frame Type"
+  },
+  {
+   "fieldname": "column_break_fg5av",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "undercut",
+   "fieldtype": "Data",
+   "label": "Undercut"
+  },
+  {
+   "fieldname": "u_channel",
+   "fieldtype": "Data",
+   "label": "U Channel"
+  },
+  {
+   "fieldname": "fire_rating",
+   "fieldtype": "Data",
+   "label": "Fire Rating"
+  },
+  {
+   "fieldname": "ral",
+   "fieldtype": "Data",
+   "label": "RAL"
+  },
+  {
+   "fieldname": "item_details",
+   "fieldtype": "Table",
+   "label": "Item Details",
+   "options": "Specification"
+  },
+  {
+   "fieldname": "hardware_set_section_section",
+   "fieldtype": "Section Break",
+   "label": "Hardware Set Details"
+  },
+  {
+   "fieldname": "hardware_set",
+   "fieldtype": "Link",
+   "label": "Hardware Set",
+   "options": "Hardware Set",
+   "read_only": 1
+  },
+  {
+   "fieldname": "hw_set_data",
+   "fieldtype": "Small Text",
+   "hidden": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "hardware_set_summary",
+   "fieldtype": "Long Text",
+   "read_only": 1
+  },
+  {
+   "fieldname": "references_tab",
+   "fieldtype": "Tab Break",
+   "label": "References"
+  },
+  {
+   "fieldname": "quotation",
+   "fieldtype": "Link",
+   "label": "Quotation",
+   "options": "Quotation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "label": "Sales Order",
+   "options": "Sales Order",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-05-12 09:41:04.017709",
+ "modified_by": "Administrator",
+ "module": "Vulcan App",
+ "name": "Item Details",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

@@ -7,6 +7,25 @@ app_description = "Vulcan"
 app_email = "craftinteractive.com"
 app_license = "MIT"
 
+
+fixtures = [
+    {
+        "dt":"Custom Field",
+        "filters":[
+            ['name','in',[
+                #TODO: Get all other fields
+                'Quotation Item-item_details',
+                'Sales Order Item-item_details',
+                'Quotation Item-door_no',
+                'Sales Order Item-door_no',
+                'Quotation-add_hardware_set',
+                'Quotation-assign_item_details',
+                'Quotation-section_break_waeqk',
+            ]]
+        ]
+    }
+]
+
 # Includes in <head>
 # ------------------
 
@@ -29,7 +48,10 @@ app_license = "MIT"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {
+    "Sales Order" : "public/js/sales_order.js",
+    "Quotation": "public/js/quotation.js"
+    }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}

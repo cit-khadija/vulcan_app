@@ -1,0 +1,75 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2023-05-12 13:38:34.692191",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "order_processing",
+  "sales_order",
+  "sales_order_date",
+  "col_break1",
+  "customer"
+ ],
+ "fields": [
+  {
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Sales Order",
+   "options": "Sales Order",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sales_order_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Sales Order Date",
+   "oldfieldname": "document_date",
+   "oldfieldtype": "Date",
+   "print_width": "120px",
+   "read_only": 1,
+   "width": "120px"
+  },
+  {
+   "fieldname": "col_break1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer",
+   "options": "Customer",
+   "print_width": "150px",
+   "read_only": 1,
+   "width": "150px"
+  },
+  {
+   "fieldname": "order_processing",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Order Processing",
+   "oldfieldname": "prevdoc_docname",
+   "oldfieldtype": "Data",
+   "options": "Order Processing",
+   "print_width": "150px",
+   "reqd": 1,
+   "width": "150px"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2023-05-12 17:40:44.631308",
+ "modified_by": "Administrator",
+ "module": "Vulcan App",
+ "name": "Custom Work Order Order Processing",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "ASC",
+ "states": []
+}
