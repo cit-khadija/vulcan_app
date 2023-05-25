@@ -20,11 +20,22 @@ frappe.ui.form.on('Order Processing', {
 				// frm.add_custom_button(__('Work Order'), () => make_workorder(frm), __('Create'));
 			// }
 		}
+	},
+	validate: function(frm){
+		// op1 = frappe.db.exists("Order Processing", {"sales_order":frm.doc.sales_order, "docstatus":1})
+		// op2 = frappe.db.exists("Order Processing", {"sales_order":frm.doc.sales_order, "docstatus":0})
+		// if(op1 || op2){
+		// 	frappe.msgprint(
+		// 	_("Order Processing Document {0} already created")
+		// 	.format("<a href='/app/order-processing/{0}'>{0}</a>")
+		// 	.format(op)
+		// 	)
+		// }
 	}
 });
 
 //TODO HIGH: on_save validation whether an OP already exists on the same sales order with docstatus 1
-
+//TODO: add sales order items when selecting sales order
 //TODO LOW: check if adding controller like in sales order is required
 
 // var make_workorder = function(frm){

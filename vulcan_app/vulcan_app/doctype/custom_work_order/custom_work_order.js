@@ -1,18 +1,10 @@
 // // Copyright (c) 2023, Crafrt and contributors
 // // For license information, please see license.txt
 
-// frappe.ui.form.on('Custom Work Order', {
-// 	// refresh: function(frm) {
-
-// 	// }
-// });
-
-
 // Copyright (c) 2017, Frappe Technologies Pvt. Ltd. and contributors
 // For license information, please see license.txt
 //This document is based on Production Plan doctype from ERPnext
 
-//TODO: Edit naming series
 //TODO: Redefine depends on for get_items and combine_items
 
 frappe.ui.form.on('Custom Work Order', {
@@ -24,11 +16,6 @@ frappe.ui.form.on('Custom Work Order', {
 		});
 	},
 	setup(frm) {
-		frm.custom_make_buttons = {
-			'Work Order': 'Work Order / Subcontract PO',
-			'Material Request': 'Material Request',
-		};
-
 		frm.fields_dict['po_items'].grid.get_field('warehouse').get_query = function(doc) {
 			return {
 				filters: {
@@ -37,7 +24,25 @@ frappe.ui.form.on('Custom Work Order', {
 			}
 		}
 
-		frm.set_query('for_warehouse', function(doc) {
+		frm.fields_dict['rm_items'].grid.get_field('warehouse').get_query = function(doc) {
+			return {
+				filters: {
+					company: doc.company,
+					is_group: 0
+				}
+			}
+		}
+
+		frm.set_query('default_source_warehouse', function(doc) {
+			return {
+				filters: {
+					company: doc.company,
+					is_group: 0
+				}
+			}
+		});
+
+		frm.set_query('wip_warehouse', function(doc) {
 			return {
 				filters: {
 					company: doc.company,
@@ -65,150 +70,53 @@ frappe.ui.form.on('Custom Work Order', {
 			} else frappe.msgprint(__("Please enter Item first"));
 		}
 
-		frm.fields_dict['mr_items'].grid.get_field('warehouse').get_query = function(doc) {
-			return {
-				filters: {
-					company: doc.company
-				}
-			}
-		}
 	},
 
 	refresh(frm) {
+		// TODO:find out how to make this work
+		frm.set_indicator_formatter('item_code', function(doc) {
+			if (!doc.warehouse) {
+				return 'blue';
+			} else {
+				return (doc.qty>40) ? 'green' : 'orange';
+			}
+		});
+
+		frm.set_df_property('rm_items', 'cannot_add_rows', true);
+		frm.set_df_property('rm_items', 'cannot_delete_rows', true);
+
 		if (frm.doc.docstatus === 1) {
-			frm.trigger("show_progress");
-
 			if (frm.doc.status !== "Completed") {
-				frm.add_custom_button(__("Work Order Tree"), ()=> {
-					frappe.set_route('Tree', 'Work Order', {production_plan: frm.doc.name});
-				}, __('View'));
-
-				frm.add_custom_button(__("Production Plan Summary"), ()=> {
-					frappe.set_route('query-report', 'Production Plan Summary', {production_plan: frm.doc.name});
-				}, __('View'));
-
 				if  (frm.doc.status === "Closed") {
 					frm.add_custom_button(__("Re-open"), function() {
-						frm.events.close_open_production_plan(frm, false);
+						frm.events.close_open_custom_work_order(frm, false);
 					}, __("Status"));
 				} else {
 					frm.add_custom_button(__("Close"), function() {
-						frm.events.close_open_production_plan(frm, true);
+						frm.events.close_open_custom_work_order(frm, true);
 					}, __("Status"));
 				}
 
-				//TODO: add function to make stock entry
-				if (frm.doc.po_items && frm.doc.status !== "Closed") {
-					frm.add_custom_button(__("Work Order / Subcontract PO"), ()=> {
-						frm.trigger("make_work_order");
-					}, __('Create'));
+				// TODO:conditions to check if transfer and manufacture is required should be defined
+				if (frm.doc.total_planned_qty != frm.doc.total_produced_qty){
+					// *************************************************************************************
+					// START BUTTON
+					if(!frm.doc.skip_transfer){
+					var start_btn = frm.add_custom_button(__('Start'), function() { make_stock_entry(frm, "Material Transfer for Manufacture") });
+					start_btn.addClass('btn-primary');
+					}
+					// *************************************************************************************
+					// FINISH BUTTON
+
+					// TODO: Not working properly
+					var finish_btn = frm.add_custom_button(__('Finish'), function() { make_stock_entry(frm, "Bulk Manufacture") });
+					finish_btn.addClass('btn-primary');
 				}
 
-				if (frm.doc.mr_items && !in_list(['Material Requested', 'Closed'], frm.doc.status)) {
-					frm.add_custom_button(__("Material Request"), ()=> {
-						frm.trigger("make_material_request");
-					}, __('Create'));
-				}
 			}
 		}
-
-		if (frm.doc.status !== "Closed") {
-			frm.page.set_inner_btn_group_as_primary(__('Create'));
-		}
+		//CHECK: what is this trigger for?
 		frm.trigger("material_requirement");
-
-		const projected_qty_formula = ` <table class="table table-bordered" style="background-color: var(--scrollbar-track-color);">
-			<tr><td style="padding-left:25px">
-				<div>
-				<h3 style="text-decoration: underline;">
-					<a href = "https://erpnext.com/docs/user/manual/en/stock/projected-quantity">
-						${__("Projected Quantity Formula")}
-					</a>
-				</h3>
-					<div>
-						<h3 style="font-size: 13px">
-							(Actual Qty + Planned Qty + Requested Qty + Ordered Qty) - (Reserved Qty + Reserved for Production + Reserved for Subcontract)
-						</h3>
-					</div>
-					<br>
-					<div>
-						<ul>
-							<li>
-								${__("Actual Qty: Quantity available in the warehouse.")}
-							</li>
-							<li>
-								${__("Planned Qty: Quantity, for which, Work Order has been raised, but is pending to be manufactured.")}
-							</li>
-							<li>
-								${__('Requested Qty: Quantity requested for purchase, but not ordered.')}
-							</li>
-							<li>
-								${__('Ordered Qty: Quantity ordered for purchase, but not received.')}
-							</li>
-							<li>
-								${__("Reserved Qty: Quantity ordered for sale, but not delivered.")}
-							</li>
-							<li>
-								${__('Reserved Qty for Production: Raw materials quantity to make manufacturing items.')}
-							</li>
-							<li>
-								${__('Reserved Qty for Subcontract: Raw materials quantity to make subcontracted items.')}
-							</li>
-						</ul>
-					</div>
-				</div>
-			</td></tr>
-		</table>`;
-
-		set_field_options("projected_qty_formula", projected_qty_formula);
-	},
-
-	close_open_production_plan(frm, close=false) {
-		frappe.call({
-			method: "set_status",
-			freeze: true,
-			doc: frm.doc,
-			args: {close : close},
-			callback: function() {
-				frm.reload_doc();
-			}
-		});
-	},
-
-	make_work_order(frm) {
-		frappe.call({
-			method: "make_work_order",
-			freeze: true,
-			doc: frm.doc,
-			callback: function() {
-				frm.reload_doc();
-			}
-		});
-	},
-
-	make_material_request(frm) {
-
-		frappe.confirm(__("Do you want to submit the material request"),
-			function() {
-				frm.events.create_material_request(frm, 1);
-			},
-			function() {
-				frm.events.create_material_request(frm, 0);
-			}
-		);
-	},
-
-	create_material_request(frm, submit) {
-		frm.doc.submit_material_request = submit;
-
-		frappe.call({
-			method: "make_material_request",
-			freeze: true,
-			doc: frm.doc,
-			callback: function(r) {
-				frm.reload_doc();
-			}
-		});
 	},
 
 	get_order_processings(frm) {
@@ -222,9 +130,6 @@ frappe.ui.form.on('Custom Work Order', {
 	},
 
 	get_items(frm) {
-		//TODO:redefine 
-		frm.clear_table('prod_plan_references');
-
 		frappe.call({
 			method: "get_items",
 			freeze: true,
@@ -234,173 +139,51 @@ frappe.ui.form.on('Custom Work Order', {
 			}
 		});
 	},
-	combine_items(frm) {
-		//TODO: Redefine
-		frm.clear_table("prod_plan_references");
 
+	transfer_materials: function(frm){
+		frappe.model.open_mapped_doc({
+			method:"vulcan_app.vulcan_app.doctype.custom_work_order.custom_work_order.make_material_transfer_stock_entry",
+			frm: frm
+		})
+	},
+
+	make_manufacturing_stock_entry(frm){
+		frappe.model.open_mapped_doc({
+			method:"vulcan_app.vulcan_app.doctype.custom_work_order.custom_work_order.make_manufacturing_stock_entry",
+			frm: frm
+		})
+	},
+
+	close_open_custom_work_order(frm, close=false) {
 		frappe.call({
-			method: "get_items",
+			method: "set_status",
 			freeze: true,
 			doc: frm.doc,
+			args: {close : close},
 			callback: function() {
-				frm.refresh_field("po_items");
-				if (frm.doc.sub_assembly_items.length > 0) {
-					frm.trigger("get_sub_assembly_items");
-				}
+				frm.reload_doc();
 			}
 		});
 	},
 
-	combine_sub_items(frm) {
-		if (frm.doc.sub_assembly_items.length > 0) {
-			frm.clear_table("sub_assembly_items");
-			frm.trigger("get_sub_assembly_items");
-		}
-	},
-
-	get_sub_assembly_items(frm) {
-		frm.dirty();
-
+	default_source_warehouse(frm){
 		frappe.call({
-			method: "get_sub_assembly_items",
-			freeze: true,
-			doc: frm.doc,
-			callback: function() {
-				refresh_field("sub_assembly_items");
-			}
-		});
-	},
-
-	toggle_for_warehouse(frm) {
-		frm.toggle_reqd("for_warehouse", true);
-	},
-
-	get_items_for_mr(frm) {
-		if (!frm.doc.for_warehouse) {
-			frm.trigger("toggle_for_warehouse");
-			frappe.throw(__("Select the Warehouse"));
-		}
-
-		frm.events.get_items_for_material_requests(frm, [{
-			warehouse: frm.doc.for_warehouse
-		}]);
-	},
-
-	transfer_materials(frm) {
-		if (!frm.doc.for_warehouse) {
-			frm.trigger("toggle_for_warehouse");
-			frappe.throw(__("Select the Warehouse"));
-		}
-
-		if (frm.doc.ignore_existing_ordered_qty) {
-			frm.events.get_items_for_material_requests(frm);
-		} else {
-			const title = __("Transfer Materials For Warehouse {0}", [frm.doc.for_warehouse]);
-			var dialog = new frappe.ui.Dialog({
-				title: title,
-				fields: [
-					{
-						'label': __('Transfer From Warehouses'),
-						'fieldtype': 'Table MultiSelect',
-						'fieldname': 'warehouses',
-						'options': 'Production Plan Material Request Warehouse',
-						get_query: function () {
-							return {
-								filters: {
-									company: frm.doc.company
-								}
-							};
-						},
-					},
-					{
-						'label': __('For Warehouse'),
-						'fieldtype': 'Link',
-						'fieldname': 'target_warehouse',
-						'read_only': true,
-						'default': frm.doc.for_warehouse
-					}
-				]
-			});
-
-			dialog.show();
-
-			dialog.set_primary_action(__("Get Items"), () => {
-				let warehouses = dialog.get_values().warehouses;
-				frm.events.get_items_for_material_requests(frm, warehouses);
-				dialog.hide();
-			});
-		}
-	},
-
-	get_items_for_material_requests(frm, warehouses) {
-		let set_fields = ['actual_qty', 'item_code','item_name', 'description', 'uom', 'from_warehouse',
-			'min_order_qty', 'required_bom_qty', 'quantity', 'sales_order', 'warehouse', 'projected_qty', 'ordered_qty',
-			'reserved_qty_for_production', 'material_request_type'];
-
-		frappe.call({
-			method: "erpnext.manufacturing.doctype.production_plan.production_plan.get_items_for_material_requests",
-			freeze: true,
-			args: {
-				doc: frm.doc,
-				warehouses: warehouses || []
-			},
-			callback: function(r) {
-				if(r.message) {
-					frm.set_value('mr_items', []);
-					r.message.forEach(row => {
-						let d = frm.add_child('mr_items');
-						set_fields.forEach(field => {
-							if (row[field]) {
-								d[field] = row[field];
-							}
-						});
-					});
-				}
-				refresh_field('mr_items');
-			}
-		});
-	},
-
-	show_progress(frm) {
-		var bars = [];
-		var message = '';
-		var title = '';
-
-		// produced qty
-		let item_wise_qty = {};
-		frm.doc.po_items.forEach((data) => {
-			if(!item_wise_qty[data.item_code]) {
-				item_wise_qty[data.item_code] = data.produced_qty;
-			} else {
-				item_wise_qty[data.item_code] += data.produced_qty;
+			method:"set_from_warehouse",
+			freeze:true,
+			doc:frm.doc,
+			callback: function(){
+				refresh_field('rm_items')
 			}
 		})
-
-		if (item_wise_qty) {
-			for (var key in item_wise_qty) {
-				title += __('Item {0}: {1} qty produced. ', [key, item_wise_qty[key]]);
-			}
-		}
-
-		bars.push({
-			'title': title,
-			'width': (frm.doc.total_produced_qty / frm.doc.total_planned_qty * 100) + '%',
-			'progress_class': 'progress-bar-success'
-		});
-		if (bars[0].width == '0%') {
-			bars[0].width = '0.5%';
-		}
-		message = title;
-		frm.dashboard.add_progress(__('Status'), bars, message);
 	},
 });
 
-frappe.ui.form.on("Production Plan Item", {
+frappe.ui.form.on("Custom Work Order Item", {
 	item_code(frm, cdt, cdn) {
 		const row = locals[cdt][cdn];
 		if (row.item_code) {
 			frappe.call({
-				method: "erpnext.manufacturing.doctype.production_plan.production_plan.get_item_data",
+				method: "erpnext.manufacturing.doctype.custom_work_order.custom_work_order.get_item_data",
 				args: {
 					item_code: row.item_code
 				},
@@ -414,28 +197,6 @@ frappe.ui.form.on("Production Plan Item", {
 	}
 });
 
-frappe.ui.form.on("Material Request Plan Item", {
-	warehouse(frm, cdt, cdn) {
-		const row = locals[cdt][cdn];
-		if (row.warehouse && row.item_code && frm.doc.company) {
-			frappe.call({
-				method: "erpnext.manufacturing.doctype.production_plan.production_plan.get_bin_details",
-				args: {
-					row: row,
-					company: frm.doc.company,
-					for_warehouse: row.warehouse
-				},
-				callback: function(r) {
-					let {projected_qty, actual_qty} = r.message;
-
-					frappe.model.set_value(cdt, cdn, 'projected_qty', projected_qty);
-					frappe.model.set_value(cdt, cdn, 'actual_qty', actual_qty);
-				}
-			})
-		}
-	}
-});
-
 frappe.tour['Custom Work Order'] = [
 	{
 		fieldname: "get_order_processings",
@@ -445,21 +206,66 @@ frappe.tour['Custom Work Order'] = [
 	{
 		fieldname: "get_items",
 		title: "Get Finished Goods for Manufacture",
-		description: __("Click on 'Get Finished Goods for Manufacture' to fetch the items from the above Sales Orders. Items only for which a BOM is present will be fetched.")
+		description: __("Click on 'Get Finished Goods for Manufacture' to fetch the items from the above Order Processings. Items only for which a BOM is present will be fetched.")
 	},
 	{
 		fieldname: "po_items",
 		title: "Finished Goods",
-		description: __("On expanding a row in the Items to Manufacture table, you'll see an option to 'Include Exploded Items'. Ticking this includes raw materials of the sub-assembly items in the production process.")
+		description: __("TODO: check if anything needs to be mentioned here")
 	},
-	{
-		fieldname: "include_non_stock_items",
-		title: "Include Non Stock Items",
-		description: __("To include non-stock items in the material request planning. i.e. Items for which 'Maintain Stock' checkbox is unticked.")
-	},
-	{
-		fieldname: "include_subcontracted_items",
-		title: "Include Subcontracted Items",
-		description: __("To add subcontracted Item's raw materials if include exploded items is disabled.")
-	}
 ];
+
+var make_stock_entry = function(frm, purpose){
+	if(purpose=="Material Transfer for Manufacture"){
+		validate_warehouses(frm)
+		if(!frm.doc.wip_warehouse && !frm.doc.skip_transfer){
+			frappe.throw("Please select the Work In Progress Warehouse")
+		}
+		frm.trigger("transfer_materials")
+	}
+
+	if(purpose=="Bulk Manufacture"){
+		validate_warehouses(frm)
+		validate_quantity(frm)
+		frm.trigger("make_manufacturing_stock_entry")
+	}
+}
+
+var validate_warehouses = function(frm){
+	$.each(frm.doc.po_items, (k,item)=>{
+		if(!item.warehouse){
+			var message = "Please select FG warehouse for Finished Good item at Row #"+item.idx
+			frappe.throw(message)
+		}
+	})
+	$.each(frm.doc.rm_items, (k,item)=>{
+		if(!item.warehouse && !frm.doc.default_source_warehouse){
+			var message = "Please select warehouse for RM item at Row #"+item.idx+" or set default source warehouse"
+			frappe.throw(message)
+		}
+	})
+}
+
+var validate_quantity = function(frm){
+	frappe.call({
+		method:"get_stock_and_rate",
+		doc:frm.doc,
+		args: {validate_for_stock_entry: true},
+		freeze:true,
+		callback: function(r){
+			console.log(r)
+		}
+	})
+}
+
+var check_for_manufacturing_entry = function(frm){
+	frappe.call({
+		method:"check_for_manufacturing_entry",
+		doc:frm.doc,
+		callback: function(r){
+			return r.message
+		}
+	})
+}
+
+//TODO: remove cwo stock entry item table instead put a consolidated items table for summary

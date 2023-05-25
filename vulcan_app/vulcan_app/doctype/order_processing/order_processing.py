@@ -19,6 +19,56 @@ class OrderProcessing(Document):
 		prefix = 'OP-{}-'.format(so_number)
 		self.name = prefix + getseries(prefix, 3)
 
+@frappe.whitelist()
+def get_items_to_deliver(order_processing):
+	if order_processing:
+		op = frappe.get_doc("Order Processing", order_processing)
+		
+		items = []
+
+		for item in op.items:
+			delivered_via_dn = frappe.db.sql(f"""select sum(qty) from `tabDelivery Note Item`
+				where so_detail = "{item.so_detail}" and docstatus = 1
+				and against_sales_order = "{item.sales_order}" """
+			)
+
+			delivered_via_si = frappe.db.sql(
+				f"""select sum(si_item.qty)
+				from `tabSales Invoice Item` si_item, `tabSales Invoice` si
+				where si_item.parent = si.name and si.update_stock = 1
+				and si_item.so_detail = "{item.so_detail}" and si.docstatus = 1
+				and si_item.sales_order = "{item.sales_order}" """,
+			)
+
+			total_delivered_qty = (flt(delivered_via_dn[0][0]) if delivered_via_dn else 0) + (
+			flt(delivered_via_si[0][0]) if delivered_via_si else 0
+			)
+
+			#TODO: set up automatic update for delivered qty
+			#TODO: set up deliver parts
+			if item.delivered_qty != total_delivered_qty:
+				item.db_set("delivered_qty", total_delivered_qty)
+
+			if item.delivered_qty < item.manufactured_qty:
+				pending_qty = item.manufactured_qty - item.delivered_qty
+				
+				if pending_qty:
+					items.append(
+						dict(
+							name = item.name,
+							item_code=item.item_code,
+							description=item.description,
+							# warehouse=item.warehouse,
+							pending_qty=pending_qty,
+							sales_order_item=item.name,
+							door_no = item.door_no,
+							item_details = item.item_details,
+							sales_order = item.sales_order,
+							order_processing = item.parent
+						)
+					)
+				
+
 
 # @frappe.whitelist()
 # def get_work_order_items(sales_order, for_raw_material_request=0):

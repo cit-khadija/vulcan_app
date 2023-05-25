@@ -21,6 +21,8 @@ fixtures = [
                 'Quotation-add_hardware_set',
                 'Quotation-assign_item_details',
                 'Quotation-section_break_waeqk',
+                'Stock Entry-custom_work_order',
+                'Stock Entry Detail-cwo_item'
             ]]
         ]
     }
@@ -50,7 +52,8 @@ fixtures = [
 # include js in doctype views
 doctype_js = {
     "Sales Order" : "public/js/sales_order.js",
-    "Quotation": "public/js/quotation.js"
+    "Quotation": "public/js/quotation.js",
+    "Stock Entry": "public/js/stock_entry.js"
     }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -123,6 +126,14 @@ doctype_js = {
 # Document Events
 # ---------------
 # Hook on document methods and events
+
+doc_events = {
+    "Stock Entry": {
+        "on_submit":"vulcan_app.events.stock_entry.on_submit",
+        "before_submit": "vulcan_app.events.stock_entry.before_submit",
+        "on_cancel":"vulcan_app.events.stock_entry.on_cancel",
+    }
+}
 
 # doc_events = {
 #	"*": {

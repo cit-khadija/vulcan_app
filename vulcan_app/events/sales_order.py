@@ -5,7 +5,10 @@ from frappe import _
 @frappe.whitelist()
 def make_order_processing(source_name, target_doc=None):
 
-    op = frappe.db.exists("Order Processing", {"sales_order":source_name})
+    def update_item(obj, target, source_parent):
+        target.sales_order_item = obj.name
+
+    op = frappe.db.exists("Order Processing", {"sales_order":source_name, "docstatus":["<",2]})
 
     if op:
         frappe.msgprint(
@@ -24,10 +27,16 @@ def make_order_processing(source_name, target_doc=None):
                     "validation": {"docstatus": ["=",1]},
                     "field_map":{
                         "name": "sales_order",
-                        "items": "items",
                         "sales_order":"sales_order",
                         "transaction_date":"transaction_date"
                     }
+                },
+                "Sales Order Item":{
+                    "doctype": "Ordered Item",
+                    "field_map":{
+                        "sales_order":"parent",
+                    },
+                    "postprocess":update_item
                 }
             },
             target_doc,

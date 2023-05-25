@@ -10,10 +10,28 @@ frappe.ui.form.on("Quotation", {
     },
     assign_item_details:function(frm){
         add_item_details_dialog(frm)
+    },
+    validate: function(frm){
+        validate_door_no(frm)
     }
+
 })
 
-//TODO: Validate if there are no door no duplicates
+var validate_door_no = function(frm){
+    var door_no_list = []
+    if(frm.doc.items && frm.doc.items.length>0){
+        $.each(frm.doc.items, (k, item)=>{
+            if (door_no_list.includes(item.door_no)){
+                var message="Please ensure there are no duplicate Door Nos"
+                frappe.throw(message)
+            } else {
+                door_no_list.push(item.door_no)
+            }
+        })
+
+    }
+}
+
 
 var add_item_details_dialog = function(frm){
     frm.call({
