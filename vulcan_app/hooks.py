@@ -22,7 +22,10 @@ fixtures = [
                 'Quotation-assign_item_details',
                 'Quotation-section_break_waeqk',
                 'Stock Entry-custom_work_order',
-                'Stock Entry Detail-cwo_item'
+                'Stock Entry Detail-cwo_item',
+                'Delivery Note Item-against_order_processing',
+                'Delivery Note Item-ordered_item',
+                'Delivery Note-order_processing'
             ]]
         ]
     }
@@ -134,7 +137,8 @@ doc_events = {
         "on_cancel":"vulcan_app.events.stock_entry.on_cancel",
     },
     "Delivery Note": {
-        "validate":"vulcan_app.events.delivery_note.override_status_updater"
+        # "validate":"vulcan_app.events.delivery_note.override_status_updater"
+        "after_submit":"vulcan_app.events.delivery_note.after_submit"
     }
 }
 

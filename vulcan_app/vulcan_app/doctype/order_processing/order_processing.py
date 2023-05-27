@@ -86,7 +86,7 @@ def get_item_parts_to_deliver(order_processing):
 						uom = item.uom,
 						door_no = item.door_no,
 						ordered_item = item.name,
-						order_processing=item.parent,
+						against_order_processing=item.parent,
 						delivery_part_item = None,
 					)
 				)
@@ -113,7 +113,7 @@ def make_delivery_note(source_name, target_doc=None):
 						qty = item["qty"],
 						door_no = item["door_no"],
 						ordered_item = item["ordered_item"],
-						order_processing = item["order_processing"],
+						against_order_processing = item["against_order_processing"],
 					)
 				)
 		else:
