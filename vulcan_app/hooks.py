@@ -132,6 +132,9 @@ doc_events = {
         "on_submit":"vulcan_app.events.stock_entry.on_submit",
         "before_submit": "vulcan_app.events.stock_entry.before_submit",
         "on_cancel":"vulcan_app.events.stock_entry.on_cancel",
+    },
+    "Delivery Note": {
+        "validate":"vulcan_app.events.delivery_note.override_status_updater"
     }
 }
 

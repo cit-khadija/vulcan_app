@@ -16,7 +16,11 @@
   "company",
   "project",
   "items_section",
-  "items"
+  "items",
+  "section_break_vvotr",
+  "status",
+  "delivery_status",
+  "per_delivered"
  ],
  "fields": [
   {
@@ -86,6 +90,27 @@
    "fieldtype": "Link",
    "label": "Project",
    "options": "Project"
+  },
+  {
+   "fieldname": "section_break_vvotr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nDraft\nOn Hold\nTo Deliver and Bill\nTo Bill\nTo Deliver\nCompleted\nCancelled\nClosed"
+  },
+  {
+   "fieldname": "delivery_status",
+   "fieldtype": "Select",
+   "label": "Delivery Status",
+   "options": "Not Delivered\nFully Delivered\nPartly Delivered\nClosed\nNot Applicable"
+  },
+  {
+   "fieldname": "per_delivered",
+   "fieldtype": "Percent",
+   "label": "%  Delivered"
   }
  ],
  "is_submittable": 1,
@@ -97,7 +122,7 @@
    "table_fieldname": "order_processings"
   }
  ],
- "modified": "2023-05-18 10:49:21.512991",
+ "modified": "2023-05-26 08:00:34.584691",
  "modified_by": "Administrator",
  "module": "Vulcan App",
  "name": "Order Processing",
