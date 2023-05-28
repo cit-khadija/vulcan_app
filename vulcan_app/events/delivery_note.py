@@ -1,6 +1,5 @@
 import frappe
 
-
 # TODO: check if this really works
 def override_status_updater(doc, event):
     pass
@@ -27,3 +26,23 @@ def override_status_updater(doc, event):
     #     },
     # ])
     # print(doc.status_updater)
+
+def validate(doc, event):
+    for item in doc.items:
+        if item.against_order_processing and item.ordered_item:
+            if item.item_group == "Partial Delivery Item":
+                oi = frappe.get_doc("Ordered Item", item.ordered_item)
+                total_deliverable = (oi.qty - oi.delivered_qty) - oi.delivered_parts
+                if item.qty > total_deliverable:
+                    frappe.throw("Please recheck the quantity.")
+
+
+def after_submit(doc, event):
+    print("*****************************************")
+    for item in doc.items:
+        if item.against_order_processing and item.ordered_item:
+            if item.item_group == "Partial Delivery Item":
+                print("*****************************************")
+                print("This is happening")
+                oi_delivered_parts = frappe.db.get_value("Ordered Item", item.ordered_item, "delivered_parts")
+                frappe.db.set_value("Ordered Item", item.ordered_item, "delivered_parts", oi_delivered_parts+item.qty)
