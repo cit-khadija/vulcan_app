@@ -191,7 +191,6 @@ class CustomWorkOrder(Document):
 
 	@frappe.whitelist()
 	def get_open_order_processings(self):
-		# TODO: define how order processings will be considered open
 		"""Pull order processings  which are pending to deliver based on criteria selected"""
 		open_op = get_order_processings(self)
 
@@ -361,7 +360,7 @@ class CustomWorkOrder(Document):
 
 ###############################################################################################
 
-	#TODO: Handle Product bundle...shouldnt be able to submit this when there is a product bundle in list.
+
 	#TODO: Check how to update qty
 	#TODO: set status
 	def update_work_order_qty(self):
@@ -527,7 +526,6 @@ def get_stock_entry_item_list(doc, purpose = "Bulk Manufacture"):
 		se_items = []
 		if doc.rm_items:
 			for item in doc.rm_items:
-				#TODO: check the following. all added according to my instinct
 				se_item = {
 					"item_code" : item.item_code,
 					"qty": item.qty,

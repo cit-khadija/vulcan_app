@@ -1,5 +1,4 @@
-# TODO: update_work_order_produced_qty
-# TODO: Make sure difference between outgoing value and incoming value is 0
+# TODO: update_work_order_produced_qty and order_processing manufactured qty without cache reload
 
 import frappe
 from frappe import _
@@ -43,9 +42,9 @@ def update_work_order(doc):
         # if doc.fg_completed_qty:
         #     pro_doc.run_method("update_work_order_qty")
         #     if doc.purpose == "Manufacture":
-        #         #TODO: check if this is required
+        #         #TODO: check if this is required...update_planned_qty might be required
         #         pro_doc.run_method("update_planned_qty")
-        #         pro_doc.update_batch_produced_qty(doc)
+        #         pro_doc.update_batch_produced_qty(doc) #only for batch items
 
         # pro_doc.run_method("update_status")
         # if not pro_doc.operations:

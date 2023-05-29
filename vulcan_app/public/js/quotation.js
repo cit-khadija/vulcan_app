@@ -1,10 +1,8 @@
 frappe.ui.form.on("Quotation", {
     refresh: function(frm){
         if(frm.doc.docstatus===0 && !frm.doc.__islocal){
-            // frm.fields_dict.items.grid.add_custom_button(__('Assign Item Details'), ()=>{
-            //     add_item_details_dialog(frm)
-            // })
             //TODO: disable creating new item details in Link field of child table. Should use above button always to create one.
+            //Check if it is possible by restricting create access.
             set_hardware_set_details_in_item_details(frm)
         }
     },

@@ -157,7 +157,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-05-12 09:41:04.017709",
+ "modified": "2023-05-29 10:07:59.044499",
  "modified_by": "Administrator",
  "module": "Vulcan App",
  "name": "Item Details",
@@ -177,7 +177,6 @@
    "write": 1
   }
  ],
- "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

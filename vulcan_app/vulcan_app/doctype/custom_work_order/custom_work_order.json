@@ -34,7 +34,6 @@
   "column_break_eitel",
   "wip_warehouse",
   "section_break_8efi3",
-  "get_raw_materials",
   "rm_items",
   "section_break_25",
   "combine_items",
@@ -287,11 +286,6 @@
    "fieldtype": "Time",
    "label": "Posting Time",
    "no_copy": 1
-  },
-  {
-   "fieldname": "get_raw_materials",
-   "fieldtype": "Button",
-   "label": "Get Raw Materials"
   }
  ],
  "icon": "fa fa-calendar",
@@ -303,7 +297,7 @@
    "link_fieldname": "custom_work_order"
   }
  ],
- "modified": "2023-05-23 11:27:15.127828",
+ "modified": "2023-05-29 09:36:17.335799",
  "modified_by": "Administrator",
  "module": "Vulcan App",
  "name": "Custom Work Order",

@@ -139,7 +139,7 @@ doc_events = {
     "Delivery Note": {
         # "validate":"vulcan_app.events.delivery_note.override_status_updater"
         "validate":"vulcan_app.events.delivery_note.validate",
-        "after_submit":"vulcan_app.events.delivery_note.after_submit"
+        "on_submit":"vulcan_app.events.delivery_note.on_submit"
     }
 }
 

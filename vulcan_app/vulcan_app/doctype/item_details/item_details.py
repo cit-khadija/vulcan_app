@@ -7,7 +7,6 @@ from frappe.model.document import Document
 class ItemDetails(Document):
 	def validate(self):
 		if self.hw_set_data:
-			#TODO: check if hardware_set_summary field is visible when there is no data
 			# Render Summary Table
 			summary_html='''
 				<div class="col-md-12">

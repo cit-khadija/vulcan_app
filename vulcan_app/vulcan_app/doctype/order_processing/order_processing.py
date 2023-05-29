@@ -3,14 +3,13 @@
 
 import frappe
 
-import json
 from frappe.model.document import Document
 from frappe.model.naming import getseries
-from frappe import _, qb
-from erpnext.stock.get_item_details import get_default_bom
+from frappe import _
 from frappe.utils import flt
-from frappe.query_builder.functions import Sum
 from frappe.model.mapper import get_mapped_doc
+from frappe.contacts.doctype.address.address import get_company_address
+from frappe.model.utils import get_fetch_values
 
 class OrderProcessing(Document):
 	def autoname(self):
@@ -90,6 +89,10 @@ def get_item_parts_to_deliver(order_processing):
 						delivery_part_item = None,
 					)
 				)
+
+		if not items:
+			frappe.throw("No Items available to deliver.")
+
 		return items
 
 @frappe.whitelist()
@@ -129,15 +132,14 @@ def make_delivery_note(source_name, target_doc=None):
 		target.run_method("set_po_nos")
 		target.run_method("calculate_taxes_and_totals")
 
-		#TODO: Handle below
-		# if source.company_address:
-		# 	target.update({"company_address": source.company_address})
-		# else:
-		# 	# set company address
-		# 	target.update(get_company_address(target.company))
+		if source.company_address:
+			target.update({"company_address": source.company_address})
+		else:
+			# set company address
+			target.update(get_company_address(target.company))
 
-		# if target.company_address:
-		# 	target.update(get_fetch_values("Delivery Note", "company_address", target.company_address))
+		if target.company_address:
+			target.update(get_fetch_values("Delivery Note", "company_address", target.company_address))
 
 		make_packing_list(target)
 

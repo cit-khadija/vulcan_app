@@ -20,7 +20,15 @@
   "section_break_vvotr",
   "status",
   "delivery_status",
-  "per_delivered"
+  "per_delivered",
+  "contact_info",
+  "billing_address_column",
+  "customer_address",
+  "address_display",
+  "company_address_section",
+  "company_address",
+  "column_break_vtj5t",
+  "company_address_display"
  ],
  "fields": [
   {
@@ -111,6 +119,53 @@
    "fieldname": "per_delivered",
    "fieldtype": "Percent",
    "label": "%  Delivered"
+  },
+  {
+   "fieldname": "contact_info",
+   "fieldtype": "Tab Break",
+   "label": "Address & Contact",
+   "options": "fa fa-bullhorn"
+  },
+  {
+   "fieldname": "billing_address_column",
+   "fieldtype": "Section Break",
+   "label": "Billing Address"
+  },
+  {
+   "fieldname": "customer_address",
+   "fieldtype": "Link",
+   "label": "Customer Address",
+   "options": "Address",
+   "read_only": 1
+  },
+  {
+   "fieldname": "address_display",
+   "fieldtype": "Small Text",
+   "label": "Address",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company_address_section",
+   "fieldtype": "Section Break",
+   "label": "Company Address",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company_address",
+   "fieldtype": "Link",
+   "label": "Company Address Name",
+   "options": "Address",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_vtj5t",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company_address_display",
+   "fieldtype": "Small Text",
+   "label": "Company Address",
+   "read_only": 1
   }
  ],
  "is_submittable": 1,
@@ -120,9 +175,13 @@
    "link_fieldname": "order_processing",
    "parent_doctype": "Custom Work Order",
    "table_fieldname": "order_processings"
+  },
+  {
+   "link_doctype": "Delivery Note",
+   "link_fieldname": "order_processing"
   }
  ],
- "modified": "2023-05-26 08:00:34.584691",
+ "modified": "2023-05-29 13:05:38.213562",
  "modified_by": "Administrator",
  "module": "Vulcan App",
  "name": "Order Processing",

@@ -5,7 +5,7 @@
 // For license information, please see license.txt
 //This document is based on Production Plan doctype from ERPnext
 
-//TODO: Redefine depends on for get_items and combine_items
+//TODO: combine_items
 
 frappe.ui.form.on('Custom Work Order', {
 
@@ -226,6 +226,9 @@ var make_stock_entry = function(frm, purpose){
 
 	if(purpose=="Bulk Manufacture"){
 		validate_warehouses(frm)
+		if(!frm.doc.wip_warehouse && !frm.doc.skip_transfer){
+			frappe.throw("Please select the Work In Progress Warehouse")
+		}
 		validate_quantity(frm)
 		frm.trigger("make_manufacturing_stock_entry")
 	}
