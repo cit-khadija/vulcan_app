@@ -107,18 +107,23 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "\nDraft\nOn Hold\nTo Deliver and Bill\nTo Bill\nTo Deliver\nCompleted\nCancelled\nClosed"
+   "options": "\nDraft\nOn Hold\nTo Deliver and Bill\nTo Bill\nTo Deliver\nCompleted\nCancelled\nClosed",
+   "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "delivery_status",
    "fieldtype": "Select",
    "label": "Delivery Status",
-   "options": "Not Delivered\nFully Delivered\nPartly Delivered\nClosed\nNot Applicable"
+   "options": "Not Delivered\nFully Delivered\nPartly Delivered\nClosed\nNot Applicable",
+   "read_only": 1
   },
   {
    "fieldname": "per_delivered",
    "fieldtype": "Percent",
-   "label": "%  Delivered"
+   "hidden": 1,
+   "label": "%  Delivered",
+   "read_only": 1
   },
   {
    "fieldname": "contact_info",
@@ -181,7 +186,7 @@
    "link_fieldname": "order_processing"
   }
  ],
- "modified": "2023-05-29 13:05:38.213562",
+ "modified": "2023-05-31 10:41:35.246443",
  "modified_by": "Administrator",
  "module": "Vulcan App",
  "name": "Order Processing",

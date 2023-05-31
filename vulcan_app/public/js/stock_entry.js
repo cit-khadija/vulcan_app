@@ -19,10 +19,6 @@ frappe.ui.form.on("Stock Entry", {
 })
 
 
-
-
-
-
 var get_total_raw_material_amount = function(frm){
     var items = frm.doc.items
     var total_amount = 0

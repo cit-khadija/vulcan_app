@@ -14,18 +14,28 @@ fixtures = [
         "filters":[
             ['name','in',[
                 #TODO: Get all other fields
-                'Quotation Item-item_details',
-                'Sales Order Item-item_details',
-                'Quotation Item-door_no',
-                'Sales Order Item-door_no',
+                # Quotation
+                'Quotation-hardware_set_summary',
+                'Quotation-hw_set_data',
+                'Quotation-hw_items',
+                'Quotation-hardware_set',
                 'Quotation-add_hardware_set',
                 'Quotation-assign_item_details',
                 'Quotation-section_break_waeqk',
+                'Quotation Item-item_details',
+                'Quotation Item-door_no',
+                # Sales Order
+                'Sales Order Item-door_no',
+                'Sales Order Item-item_details',
+                # Stock Entry
                 'Stock Entry-custom_work_order',
                 'Stock Entry Detail-cwo_item',
+                # Delivery Note
+                'Delivery Note-order_processing',
                 'Delivery Note Item-against_order_processing',
                 'Delivery Note Item-ordered_item',
-                'Delivery Note-order_processing'
+                'Delivery Note Item-item_details',
+                'Delivery Note Item-door_no'
             ]]
         ]
     }
@@ -56,7 +66,8 @@ fixtures = [
 doctype_js = {
     "Sales Order" : "public/js/sales_order.js",
     "Quotation": "public/js/quotation.js",
-    "Stock Entry": "public/js/stock_entry.js"
+    "Stock Entry": "public/js/stock_entry.js",
+    "Delivery Note": "public/js/delivery_note.js"
     }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}

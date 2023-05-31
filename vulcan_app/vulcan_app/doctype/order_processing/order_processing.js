@@ -9,6 +9,8 @@ frappe.ui.form.on('Order Processing', {
 	},
 	refresh: function(frm){
 		var per_delivered = get_percentage_delivered(frm)
+		//TODO Update this
+		set_delivered_status(frm)
 		if(frm.doc.docstatus==1){
 			//TODO Add status to close and reopen
 			if(flt(per_delivered, 6) < 100) {
@@ -24,6 +26,20 @@ frappe.ui.form.on('Order Processing', {
 //TODO HIGH: on_save validation whether an OP already exists on the same sales order with docstatus 1
 //TODO: add sales order items when selecting sales order
 //TODO: Check if non-stock items can cause issues
+
+var set_delivered_status = function(frm){
+    console.log(frm.doc.delivery_status)
+    // delivery_status = frm.doc.delivery_status
+    var all_delivered = true
+    $.each(frm.doc.items, (k, item)=>{
+        if (item.qty != item.delivered_qty){
+            all_delivered = false
+        }
+    })
+    if (all_delivered && frm.doc.delivery_status != "Fully Delivered"){
+        frappe.db.set_value("Order Processing",frm.doc.name, "delivery_status", "Fully Delivered")
+    }
+}
 
 var get_percentage_delivered = function(frm){
 	var per_delivered = 0;

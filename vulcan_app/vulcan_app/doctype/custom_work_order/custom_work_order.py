@@ -365,15 +365,13 @@ class CustomWorkOrder(Document):
 	#TODO: set status
 	def update_work_order_qty(self):
 		finished_good_qty = get_finished_good_qty(self.name)
-		print(finished_good_qty)
+		# print(finished_good_qty)
 		for item in self.po_items:
 			produced_qty = 0
 			if finished_good_qty.get(item.name):
 				produced_qty = finished_good_qty[item.name]
 			# frappe.db.set_value("Custom Work Order Item", item.name ,"produced_qty", produced_qty)
 			item.db_set("produced_qty", produced_qty)
-
-		print(self.po_items)
 			
 		self.calculate_total_produced_qty()
 
@@ -381,7 +379,9 @@ class CustomWorkOrder(Document):
 			update_produced_qty_in_op_item(item.order_processing, item.ordered_item)
 			update_produced_qty_in_so_item(item.sales_order, item.sales_order_item)
 
-		self.set_status()
+		# self.set_status()
+		print("**********************************reloading**************************")
+		self.reload()
 
 
 	def update_planned_qty(self):
@@ -396,14 +396,14 @@ class CustomWorkOrder(Document):
 			mr_obj.update_requested_qty([self.material_request_item])
 
 	def calculate_total_produced_qty(self):
-		print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+		# print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
 		self.total_produced_qty = 0
-		print(self.total_produced_qty)
+		# print(self.total_produced_qty)
 		for d in self.po_items:
-			print("************************")
-			print(d.produced_qty)
+			# print("************************")
+			# print(d.produced_qty)
 			self.total_produced_qty += flt(d.produced_qty)
-		print(self.total_produced_qty)
+		# print(self.total_produced_qty)
 		frappe.db.set_value("Custom Work Order",self.name,"total_produced_qty", self.total_produced_qty, update_modified=False)
 	
 ###############################################################################################

@@ -1,4 +1,5 @@
 import frappe
+from erpnext.stock.doctype.delivery_note.delivery_note import update_delivery_note_status
 
 # TODO: check if this really works
 def override_status_updater(doc, event):
@@ -43,3 +44,4 @@ def on_submit(doc, event):
             if item.item_group == "Partial Delivery Items":
                 oi_delivered_parts = frappe.db.get_value("Ordered Item", item.ordered_item, "delivered_parts")
                 frappe.db.set_value("Ordered Item", item.ordered_item, "delivered_parts", oi_delivered_parts+item.qty)
+                update_delivery_note_status(doc.name, "Closed")

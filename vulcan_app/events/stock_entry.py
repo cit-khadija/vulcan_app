@@ -2,7 +2,7 @@
 
 import frappe
 from frappe import _
-from frappe.utils import cint, comma_or, cstr, flt, format_time, formatdate, getdate, nowdate
+from frappe.utils import flt
 
 def on_submit(doc, method=None):
     if doc.custom_work_order:
@@ -37,6 +37,7 @@ def update_work_order(doc):
         _validate_work_order(pro_doc)
         if doc.stock_entry_type == "Bulk Manufacture":
             pro_doc.run_method("update_work_order_qty")
+            pro_doc.run_method("set_status")
 
 
         # if doc.fg_completed_qty:

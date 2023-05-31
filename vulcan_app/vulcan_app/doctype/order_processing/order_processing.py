@@ -84,6 +84,7 @@ def get_item_parts_to_deliver(order_processing):
 						stock_uom = item.uom,
 						uom = item.uom,
 						door_no = item.door_no,
+						item_details = item.item_details,
 						ordered_item = item.name,
 						against_order_processing=item.parent,
 						delivery_part_item = None,

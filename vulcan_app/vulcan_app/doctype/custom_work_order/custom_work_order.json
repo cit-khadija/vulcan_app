@@ -140,6 +140,7 @@
    "default": "0",
    "fieldname": "combine_items",
    "fieldtype": "Check",
+   "hidden": 1,
    "label": "Consolidate Items"
   },
   {
@@ -297,7 +298,7 @@
    "link_fieldname": "custom_work_order"
   }
  ],
- "modified": "2023-05-29 09:36:17.335799",
+ "modified": "2023-05-31 02:17:39.840242",
  "modified_by": "Administrator",
  "module": "Vulcan App",
  "name": "Custom Work Order",
