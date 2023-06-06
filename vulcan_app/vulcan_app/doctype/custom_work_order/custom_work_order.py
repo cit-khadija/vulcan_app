@@ -109,7 +109,9 @@ class CustomWorkOrder(Document):
 			self.status = "In Process"
 			if self.all_items_completed():
 				self.status = "Completed"
-
+		else:
+			self.status = "Not Started"
+		frappe.db.set_value("Custom Work Order",self.name,"status", self.status)
 		# if self.status != "Completed":
 		# 	self.update_ordered_status()
 		# 	self.update_requested_status()
@@ -360,9 +362,6 @@ class CustomWorkOrder(Document):
 
 ###############################################################################################
 
-
-	#TODO: Check how to update qty
-	#TODO: set status
 	def update_work_order_qty(self):
 		finished_good_qty = get_finished_good_qty(self.name)
 		# print(finished_good_qty)
@@ -379,8 +378,8 @@ class CustomWorkOrder(Document):
 			update_produced_qty_in_op_item(item.order_processing, item.ordered_item)
 			update_produced_qty_in_so_item(item.sales_order, item.sales_order_item)
 
-		# self.set_status()
-		print("**********************************reloading**************************")
+		self.set_status()
+		#TODO: CHECK HOW TO RELOAD
 		self.reload()
 
 
