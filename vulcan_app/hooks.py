@@ -24,6 +24,10 @@ fixtures = [
                 'Quotation-section_break_waeqk',
                 'Quotation Item-item_details',
                 'Quotation Item-door_no',
+                'Quotation Item-pricing',
+                'Quotation Item-door_price',
+                'Quotation Item-hardware_price',
+                'Quotation Item-installation_price',
                 # Sales Order
                 'Sales Order Item-door_no',
                 'Sales Order Item-item_details',

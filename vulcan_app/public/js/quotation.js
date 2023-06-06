@@ -12,6 +12,7 @@ frappe.ui.form.on("Quotation", {
     validate: function(frm){
         validate_door_no(frm);
         validate_hw_sets(frm);
+        set_door_price(frm);
     },
     before_submit: function(frm){
         validate_item_details(frm)
@@ -21,6 +22,15 @@ frappe.ui.form.on("Quotation", {
     }
 })
 
+
+var set_door_price = function(frm){
+    if(frm.doc.items && frm.doc.items.length>0){
+        $.each(frm.doc.items, (k, item)=>{
+            var unit_price = item.door_price + item.hardware_price + item.installation_price
+            frappe.model.set_value("Quotation Item", item.name, "rate", unit_price)
+        })
+    }
+}
 
 
 var validate_door_no = function(frm){
