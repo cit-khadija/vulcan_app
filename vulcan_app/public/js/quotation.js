@@ -1,5 +1,14 @@
 frappe.ui.form.on("Quotation", {
     refresh: function(frm){
+
+        frm.set_query("item_details", "items", function(doc, cdt, cdn){
+            return {
+                "filters": {
+                    "quotation": frm.doc.name
+                }
+            }
+        })
+
         if(frm.doc.docstatus===0 && !frm.doc.__islocal){
             //TODO: disable creating new item details in Link field of child table. Should use above button always to create one.
             //Check if it is possible by restricting create access.
